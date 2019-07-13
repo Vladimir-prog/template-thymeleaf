@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 @Getter
@@ -27,10 +27,13 @@ public class Order {
     }
 
     public Set<Product> getRecommendations(int limit) {
-        Set<Product> recommendations = new TreeSet<>((o1, o2) -> o2.getRating() - o1.getRating());
+        Set<Product> recommendations = new HashSet<>();
         for (Product product : shoppingCart.keySet()) {
             recommendations.addAll(product.getRecomendations());
         }
-        return recommendations.stream().limit(limit).collect(Collectors.toSet());
+        return recommendations.stream()
+                .sorted((o1, o2) -> o2.getRating() - o1.getRating())
+                .limit(limit)
+                .collect(Collectors.toSet());
     }
 }
