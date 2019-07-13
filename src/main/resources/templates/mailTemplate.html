@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Подтверждение заказа</title>
+</head>
+<body>
+<p><strong>Уважаемый <span th:text="${user.getFullName()}"></span>!</strong></p>
+
+<p>Просим ответным письмом подтвердить ваш заказ №<span th:text="${order.orderNumber}"></span> от <span
+        th:text="${order.date}"></span>г.</p>
+
+<table border="2" cellpadding="3" cellspacing="3" style="width:1000px">
+    <caption>Заказ номер <span th:text="${order.orderNumber}"></span></caption>
+    <thead>
+    <tr>
+        <th scope="col">№</th>
+        <th scope="col">наименование</th>
+        <th scope="col">количество</th>
+        <th scope="col">цена за шт.</th>
+        <th scope="col">стоимость</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="element, index: ${order.shoppingCart}">
+        <td th:text="${index.index + 1}"></td>
+        <td th:text="${element.key.productName}"></td>
+        <td th:text="${element.value}"></td>
+        <td th:text="${element.key.price}"></td>
+        <td th:text="${element.value * element.key.price}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<p>Итого к оплате: <strong th:text="${order.getTotalPrice()}"></strong></p>
+
+<table border="1" cellpadding="1" cellspacing="1" style="width:500px">
+    <caption>Другие покупатели часто покупают с этим</caption>
+    <tbody>
+    <tr th:each="recommends: ${order.getRecommendations(2)}">
+        <td th:text="${recommends.productName}"></td>
+        <td th:text="${recommends.price}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<p th:if="${user.registered}">У Вас <span th:text="${user.countOfBonuses}"></span> бонусов. Вы можете оплатить ими до
+    30% от стоимости заказа.</p>
+<p th:unless="${user.registered}">Зарегистрируйтесь и получите 200 бонусов!</p>
+</body>
+</html>
